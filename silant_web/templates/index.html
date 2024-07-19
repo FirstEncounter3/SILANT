@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Мой силант
+{% endblock title %}
+{% block content %}
+    <main class="main">
+        <h1>Проверьте комплектацию и технически характеристики техники Силант</h1>
+        <form action="" method="POST" class="get-machine">
+            {% csrf_token %}
+            <div class="input-and-label">
+                <label for="serial">Заводской номер</label>
+                <input type="text" id="serial" name="serial_number">
+            </div>
+            <div class="submit-form-button">
+                <input type="submit" value="Поиск">
+            </div>
+        </form>
+        {% if machine %}
+            <div class="result-wrapper">
+                <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
+                <div class="adaptive-table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Зав. № машины</th>
+                            <th>Модель техники</th>
+                            <th>Модель двигателя</th>
+                            <th>Зав. № двигателя</th>
+                            <th>Модель трансмиссии</th>
+                            <th>Зав. № трансмиссии</th>
+                            <th>Модель ведущего моста</th>
+                            <th>Зав. № ведущего моста</th>
+                            <th>Модель управляемого моста</th>
+                            <th>Зав. № управляемого моста</th>
+                        </tr>
+                        <tr>
+                            <td>{{ machine.serial_number_of_machine }}</td>
+                            <td>{{ machine.model_of_equipment }}</td>
+                            <td>{{ machine.model_of_engine }}</td>
+                            <td>{{ machine.serial_number_of_engine }}</td>
+                            <td>{{ machine.transmission_model }}</td>
+                            <td>{{ machine.serial_number_of_transmission }}</td>
+                            <td>{{ machine.drive_axle_model }}</td>
+                            <td>{{ machine.serial_number_of_drive_axle }}</td>
+                            <td>{{ machine.steering_axle_model }}</td>
+                            <td>{{ machine.serial_number_of_steering_axle }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+                <div class="result-wrapper">
+                    <span>Поиск не производился или техника не найдена по указанному заводскому номеру</span>
+                </div>
+        {% endif %}
+            </main>
+{% endblock content %}

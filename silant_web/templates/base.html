@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Мой силант</title>
+    {% load static %}
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/index/index.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <nav>
+        <div class="logo-signin-wrapper">
+            <img src="{% static 'img/logo.jpg' %}">
+            <span>+7 (999) 999-99-99, telegram</span>
+            <a href="#">Авторизация</a>
+        </div>
+        <div class="underlogo">
+            <span>Эллектронная сервисная книжка мой силант</span>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer>
+        <div class="logo-signin-wrapper">
+            <span>+7 (999) 999-99-99, telegram</span>
+            <span>2022 Мой силант</span>
+        </div>
+    </footer>
+  </body>
+</html>

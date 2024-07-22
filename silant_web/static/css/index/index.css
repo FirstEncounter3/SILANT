@@ -33,3 +33,17 @@
     width: 80%;
     padding: 20px;
 }
+
+.get-machine .submit-form-button > button {
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #163E6C;
+    padding: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.adaptive-table-wrapper {
+    width: 100%;
+    overflow: auto;
+}

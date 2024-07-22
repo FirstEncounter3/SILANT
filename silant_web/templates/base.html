@@ -20,7 +20,11 @@
         <div class="logo-signin-wrapper">
             <img src="{% static 'img/logo.jpg' %}">
             <span>+7 (999) 999-99-99, telegram</span>
-            <a href="#">Авторизация</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">Выйти из профиля {{ user.username }}</a>
+            {% else %}
+            <a href="{% url 'account_login' %}">Авторизация</a>
+            {% endif %}
         </div>
         <div class="underlogo">
             <span>Эллектронная сервисная книжка мой силант</span>

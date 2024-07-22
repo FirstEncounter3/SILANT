@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 # Create your models here.
 
@@ -32,10 +34,14 @@ class SteeringAxleModel(BaseModel):
 class Client(BaseModel):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 class ServiceCompany(BaseModel):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 class MaintenanceType(BaseModel):
     name = models.CharField(max_length=255)
@@ -52,23 +58,23 @@ class RecoveryMethod(BaseModel):
     
 
 class Machine(models.Model):
-    serial_number_of_machine = models.CharField(max_length=255)
-    model_of_equipment = models.ForeignKey(EquipmentModel, on_delete=models.CASCADE)
-    model_of_engine = models.ForeignKey(EngineModel, on_delete=models.CASCADE)
-    serial_number_of_engine = models.CharField(max_length=255)
-    transmission_model = models.ForeignKey(TransmissionModel, on_delete=models.CASCADE)
-    serial_number_of_transmission = models.CharField(max_length=255)
-    drive_axle_model = models.ForeignKey(DriveAxleModel, on_delete=models.CASCADE)
-    serial_number_of_drive_axle = models.CharField(max_length=255)
-    steering_axle_model = models.ForeignKey(SteeringAxleModel, on_delete=models.CASCADE)
-    serial_number_of_steering_axle = models.CharField(max_length=255)
-    supply_contract_number_and_date = models.CharField(max_length=255)
-    date_shipped_from_factory = models.DateField(null=True)
-    recipient = models.CharField(max_length=255)
-    delivery_address = models.CharField(max_length=255, blank=True)
-    equipment = models.CharField(max_length=255, blank=True)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE)
+    serial_number_of_machine = models.CharField(max_length=255, verbose_name='Зав. № машины')
+    model_of_equipment = models.ForeignKey(EquipmentModel, on_delete=models.CASCADE, verbose_name='Модель техники')
+    model_of_engine = models.ForeignKey(EngineModel, on_delete=models.CASCADE, verbose_name='Модель двигателя')
+    serial_number_of_engine = models.CharField(max_length=255, verbose_name='Зав. № двигателя')
+    transmission_model = models.ForeignKey(TransmissionModel, on_delete=models.CASCADE, verbose_name='Модель трансмиссии')
+    serial_number_of_transmission = models.CharField(max_length=255, verbose_name='Зав. № трансмиссии')
+    drive_axle_model = models.ForeignKey(DriveAxleModel, on_delete=models.CASCADE, verbose_name='Модель ведущего моста')
+    serial_number_of_drive_axle = models.CharField(max_length=255, verbose_name='Зав. № ведущего моста')
+    steering_axle_model = models.ForeignKey(SteeringAxleModel, on_delete=models.CASCADE, verbose_name='Модель рулевого моста')
+    serial_number_of_steering_axle = models.CharField(max_length=255, verbose_name='Зав. № рулевого моста')
+    supply_contract_number_and_date = models.CharField(max_length=255, verbose_name='Договор поставки №, дата')
+    date_shipped_from_factory = models.DateField(null=True, verbose_name='Дата отгрузки с завода')
+    recipient = models.CharField(max_length=255, verbose_name='Грузополучатель (конечный потребитель)')
+    delivery_address = models.CharField(max_length=255, blank=True, verbose_name='Адрес доставки (эксплуатации)')
+    equipment = models.CharField(max_length=255, blank=True, verbose_name='Комплектация (доп. опции)')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Клиент')
+    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
 
     def __str__(self):
         return f'{self.serial_number_of_machine} | {self.model_of_equipment} | {self.client}'

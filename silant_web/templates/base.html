@@ -10,9 +10,9 @@
     <meta name="author" content="" />
     <title>Мой силант</title>
     {% load static %}
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{% static 'css/main.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/index/index.css' %}" rel="stylesheet" />
+      <link href="{% static 'css/main.css' %}" rel="stylesheet" />
+      <link href="{% static 'css/index/index.css' %}" rel="stylesheet" />
+      <link href="{% static 'css/machine_list/machine_list.css' %}" rel="stylesheet" />
   </head>
 
   <body>
@@ -26,16 +26,19 @@
             <a href="{% url 'account_login' %}">Авторизация</a>
             {% endif %}
         </div>
-        <div class="underlogo">
-            <span>Эллектронная сервисная книжка мой силант</span>
-        </div>
     </nav>
-    {% block content %}{% endblock %}
+    <section class="main-section">
+      <div class="underlogo">
+        <h1>Эллектронная сервисная книжка "Мой силант"</h1>
+      </div>
+      {% block content %}{% endblock %}
+    </section>
     <footer>
-        <div class="logo-signin-wrapper">
+        <div class="footer-wrapper">
             <span>+7 (999) 999-99-99, telegram</span>
             <span>2022 Мой силант</span>
         </div>
     </footer>
+    <script src="{% static 'js/index.js' %}"></script>
   </body>
 </html>

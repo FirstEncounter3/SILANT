@@ -1,0 +1,56 @@
+{% extends 'base.html' %} 
+{% block title %} Мой силант {% endblock title %} 
+{% block content %}
+<main class="main">
+    {% if complaints %}
+    <div class="result-wrapper">
+        <h1>Информация о доступных рекламациях</h1>
+        <div class="tabs">
+            <button id ="general-button">Общая информация</button>
+            <button id="maintenance-button">Техническое обслуживание</button>
+            <button class="active-tab" id="complaint-button">Рекламации</button>
+        </div>
+        <div class="adaptive-table-wrapper">
+                <table class="adaptive-table">
+                    <thead>
+                        <tr>
+                            <th>Зав. №</th>
+                            <th>Дата отказа ТО</th>
+                            <th>Наработка, м\час</th>
+                            <th>Узел отказа</th>
+                            <th>Описание отказа</th>
+                            <th>Способ</th>
+                            <th>Используемые части</th>
+                            <th>Дата восстановления</th>
+                            <th>Время простоя</th>
+                            <th>Сервисная компания</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td>{{ complaint.machine }}</a></td>
+                            <td>{{ complaint.date_of_refusal }}</td>
+                            <td>{{ complaint.operating_time }}</td>
+                            <td>{{ complaint.failure_node }}</td>
+                            <td>{{ complaint.description_of_failure }}</td>
+                            <td>{{ complaint.recovery_method }}</td>
+                            <td>{{ complaint.parts_used }}</td>
+                            <td>{{ complaint.recovery_date }}</td>
+                            <td>{{ complaint.equipment_downtime }}</td>
+                            <td>{{ complaint.service_company }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="result-wrapper">
+        <span>Рекламаций нет в базе</span>
+    </div>
+    {% endif %}
+    <a href="{% url 'machine_list' %}">Назад</a>
+
+</main>
+{% endblock content %}

@@ -9,10 +9,14 @@
     </div>
     <div class="result-wrapper">
         <h1>Информация о проведенных ТО вашей техники</h1>
+        <div class="tabs">
+            <button id="general-button">Общая информация</button>
+            <button class="active-tab" id="maintenance-button">Техническое обслуживание</button>
+            <button id="complaint-button">Рекламации</button>
+        </div>
         <div class="adaptive-table-wrapper">
-            <h1> 
             {% if maintenances %}
-                <table>
+                <table class="adaptive-table">
                     <thead>
                         <tr>
                             <th>Вид ТО</th>

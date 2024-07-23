@@ -40,8 +40,8 @@ class Client(BaseModel):
 class ServiceCompany(BaseModel):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 class MaintenanceType(BaseModel):
     name = models.CharField(max_length=255)
@@ -66,8 +66,8 @@ class Machine(models.Model):
     serial_number_of_transmission = models.CharField(max_length=255, verbose_name='Зав. № трансмиссии')
     drive_axle_model = models.ForeignKey(DriveAxleModel, on_delete=models.CASCADE, verbose_name='Модель ведущего моста')
     serial_number_of_drive_axle = models.CharField(max_length=255, verbose_name='Зав. № ведущего моста')
-    steering_axle_model = models.ForeignKey(SteeringAxleModel, on_delete=models.CASCADE, verbose_name='Модель рулевого моста')
-    serial_number_of_steering_axle = models.CharField(max_length=255, verbose_name='Зав. № рулевого моста')
+    steering_axle_model = models.ForeignKey(SteeringAxleModel, on_delete=models.CASCADE, verbose_name='Модель управляемого моста')
+    serial_number_of_steering_axle = models.CharField(max_length=255, verbose_name='Зав. № управляемого моста')
     supply_contract_number_and_date = models.CharField(max_length=255, verbose_name='Договор поставки №, дата')
     date_shipped_from_factory = models.DateField(null=True, verbose_name='Дата отгрузки с завода')
     recipient = models.CharField(max_length=255, verbose_name='Грузополучатель (конечный потребитель)')

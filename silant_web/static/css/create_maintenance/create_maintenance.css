@@ -1,0 +1,21 @@
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.create-button {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    margin: 20px;
+    padding: 5px;
+    background-color: #163E6C;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+{% block title %} Мой силант {% endblock title %} 
+{% block content %}
+<h1>Создание запроса на техническое обслуживание</h1>
+<div class="form-wrapper">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="submit-form-button">
+            <button type="submit">Отправить</button>
+        </div>
+    </form>
+</div>
+<div class="back">
+    <a href="{% url 'machine_list' %}">Отмена</a>
+</div>
+
+{% endblock content %}

@@ -5,6 +5,8 @@ from .views import (
     machine_list,
     machine_detail,
     complaints_list,
+    maintenance_list,
+    MaintenanceCreateView,
 )
 
 urlpatterns = [
@@ -12,4 +14,6 @@ urlpatterns = [
     path('machines/', machine_list, name='machine_list'),
     path('machines/<int:machine_id>/', machine_detail, name='machine_detail'),
     path('complaints/', complaints_list, name='complaints_list'),
+    path('maintenances/', maintenance_list, name='maintenance_list'),
+    path('maintenances/create/', MaintenanceCreateView.as_view(), name='maintenance_create'),
 ]

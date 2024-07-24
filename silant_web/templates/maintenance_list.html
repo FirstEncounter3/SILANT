@@ -1,0 +1,48 @@
+{% extends 'base.html' %} 
+{% block title %} Мой силант {% endblock title %} 
+{% block content %}
+<main class="main">
+    <div class="result-wrapper">
+        <h1>Информация обо всех заказах ТО</h1>
+        <div class="tabs">
+            <button id ="general-button">Общая информация</button>
+            <button class="active-tab" id="maintenance-button">Техническое обслуживание</button>
+            <button id="complaint-button">Рекламации</button>
+        </div>
+        {% if maintenances %}
+        <div class="adaptive-table-wrapper">
+            <table class="adaptive-table">
+                <thead>
+                    <tr>
+                        <th>Вид ТО</th>
+                        <th>Дата проведения ТО</th>
+                        <th>Наработка, м\час</th>
+                        <th>№ заказ-наряда</th>
+                        <th>Дата заказ-наряда</th>
+                        <th>Организация проводившая ТО</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for maintenance in maintenances %}
+                    <tr>
+                        <td>{{ maintenance.maintenance_type }}</a></td>
+                        <td>{{ maintenance.maintenance_date }}</td>
+                        <td>{{ maintenance.operating_time }}</td>
+                        <td>{{ maintenance.work_order_number }}</td>
+                        <td>{{ maintenance.work_order_date }}</td>
+                        <td>{{ maintenance.the_organization_that_carried_out_the_maintenance }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="result-wrapper">
+        <span>Заказов ТО нет в базе</span>
+    </div>
+    {% endif %}
+    <button class="create-button" id="create_maintenance">+</button>
+    <a href="{% url 'machine_list' %}">Назад</a>
+</main>
+{% endblock content %}

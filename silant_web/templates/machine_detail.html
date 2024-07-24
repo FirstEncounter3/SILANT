@@ -14,8 +14,8 @@
             <button class="active-tab" id="maintenance-button">Техническое обслуживание</button>
             <button id="complaint-button">Рекламации</button>
         </div>
+        {% if maintenances %}
         <div class="adaptive-table-wrapper">
-            {% if maintenances %}
                 <table class="adaptive-table">
                     <thead>
                         <tr>

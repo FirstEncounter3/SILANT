@@ -81,14 +81,14 @@ class Machine(models.Model):
 
 
 class Maintenance(models.Model):
-    maintenance_type = models.ForeignKey(MaintenanceType, on_delete=models.CASCADE)
-    maintenance_date = models.DateField(null=True)
-    operating_time = models.IntegerField()
-    work_order_number = models.CharField(max_length=255)
-    work_order_date = models.DateField(null=True)
-    the_organization_that_carried_out_the_maintenance = models.CharField(max_length=255)
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE)
+    maintenance_type = models.ForeignKey(MaintenanceType, on_delete=models.CASCADE, verbose_name='Вид ТО')
+    maintenance_date = models.DateField(null=True, verbose_name='Дата проведения ТО')
+    operating_time = models.IntegerField(verbose_name='Наработка, м/час')
+    work_order_number = models.CharField(max_length=255, verbose_name='№ заказ-наряда')
+    work_order_date = models.DateField(null=True, verbose_name='Дата заказ-наряда')
+    the_organization_that_carried_out_the_maintenance = models.CharField(max_length=255, verbose_name='Организация, проводившая ТО')
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Машина')
+    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
 
     def __str__(self):
         return f"{self.maintenance_type} | {self.machine} | {self.maintenance_date} | {self.machine}"

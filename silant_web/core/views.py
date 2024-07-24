@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.decorators import method_decorator
 
 from django.views.generic import (
     ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
 )
 
 from .models import (
@@ -16,6 +20,8 @@ from .models import (
     SteeringAxleModel,
     Complaint,
 )
+
+from .forms import MaintenanceForm
 
 # Create your views here.
 
@@ -129,6 +135,23 @@ def machine_detail(request, machine_id):
         "machine_detail.html",
         {"machine": machine, "maintenances": maintenances},
     )
+
+
+@login_required
+@permission_required("core.view_maintenance", raise_exception=True)
+def maintenance_list(request):
+    maintenances = Maintenance.objects.all()
+    return render(request, "maintenance_list.html", {"maintenances": maintenances})
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(permission_required('core.add_maintenance', raise_exception=True), name='dispatch')
+class MaintenanceCreateView(CreateView):
+    form_class = MaintenanceForm
+    model = Maintenance
+    template_name = "maintenance_create.html"
+    success_url = '/maintenances/'
+
 
 @login_required
 @permission_required("core.view_complaint", raise_exception=True)

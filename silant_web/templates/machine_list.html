@@ -8,11 +8,12 @@
     <div class="result-wrapper">
         <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
         {% if machines %}
-        <div class="tabs">
-            <button class="active-tab" id="general-button">Общая информация</button>
-            <button id="maintenance-button">Техническое обслуживание</button>
-            <button id="complaint-button">Рекламации</button>
-        </div>
+        <form method="get" class="mb-4">
+            <h1>Фильтрация</h1>
+            {{ filter.form }}
+            <button type="submit">Фильтровать</button>
+        </form>
+        {% include 'tabs.html' with active_tab='general' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
                 <thead>
@@ -37,7 +38,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for machine in machines %}
+                    {% for machine in filter.qs %}
                     <tr>
                         <td><a href="{% url 'machine_detail' machine.id %}">{{ machine.serial_number_of_machine }}</a></td>
                         <td>{{ machine.model_of_equipment }}</a></td>
@@ -45,9 +46,9 @@
                         <td>{{ machine.serial_number_of_engine }}</td>
                         <td>{{ machine.transmission_model }}</td>
                         <td>{{ machine.serial_number_of_transmission }}</td>
-                        <td>{{ machine.model_of_drive_axle }}</td>
+                        <td>{{ machine.drive_axle_model }}</td>
                         <td>{{ machine.serial_number_of_drive_axle }}</td>
-                        <td>{{ machine.model_of_steering_axle }}</td>
+                        <td>{{ machine.steering_axle_model }}</td>
                         <td>{{ machine.serial_number_of_steering_axle }}</td>
                         <td>{{ machine.supply_contract_number_and_date }}</td>
                         <td>{{ machine.date_shipped_from_factory }}</td>

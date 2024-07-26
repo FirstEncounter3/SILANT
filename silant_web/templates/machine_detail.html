@@ -9,11 +9,7 @@
     </div>
     <div class="result-wrapper">
         <h1>Информация о проведенных ТО вашей техники</h1>
-        <div class="tabs">
-            <button id="general-button">Общая информация</button>
-            <button class="active-tab" id="maintenance-button">Техническое обслуживание</button>
-            <button id="complaint-button">Рекламации</button>
-        </div>
+        {% include 'tabs.html' with active_tab='maintenance' %}
         {% if maintenances %}
         <div class="adaptive-table-wrapper">
                 <table class="adaptive-table">

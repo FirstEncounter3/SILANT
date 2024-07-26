@@ -4,12 +4,13 @@
 <main class="main">
     <div class="result-wrapper">
         <h1>Информация о доступных рекламациях</h1>
-        <div class="tabs">
-            <button id ="general-button">Общая информация</button>
-            <button id="maintenance-button">Техническое обслуживание</button>
-            <button class="active-tab" id="complaint-button">Рекламации</button>
-        </div>
+        {% include 'tabs.html' with active_tab='complaint' %}
         {% if complaints %}
+        <form method="get" class="mb-4">
+            <h1>Фильтрация</h1>
+            {{ filter.form }}
+            <button type="submit">Фильтровать</button>
+        </form>
         <div class="adaptive-table-wrapper">
                 <table class="adaptive-table">
                     <thead>

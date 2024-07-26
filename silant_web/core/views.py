@@ -22,6 +22,11 @@ from .models import (
 )
 
 from .forms import MaintenanceForm
+from .filters import (
+    MachineFilter,
+    MaintenanceFilter,
+    ComplaintFilter,
+)
 
 # Create your views here.
 
@@ -116,8 +121,10 @@ def machine_list(request):
         )
 
     machines = Machine.objects.filter(client=client)
+    machine_filter = MachineFilter(request.GET, queryset=machines)
+
     return render(
-        request, "machine_list.html", {"machines": machines, "client": client}
+        request, "machine_list.html", {"machines": machines, "client": client, "filter": machine_filter}
     )
 
 
@@ -141,7 +148,8 @@ def machine_detail(request, machine_id):
 @permission_required("core.view_maintenance", raise_exception=True)
 def maintenance_list(request):
     maintenances = Maintenance.objects.all()
-    return render(request, "maintenance_list.html", {"maintenances": maintenances})
+    maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    return render(request, "maintenance_list.html", {"maintenances": maintenances, "filter": maintenances_filter})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -157,4 +165,5 @@ class MaintenanceCreateView(CreateView):
 @permission_required("core.view_complaint", raise_exception=True)
 def complaints_list(request):
     complaints = Complaint.objects.all()
-    return render(request, "complaints_list.html", {"complaints": complaints})
+    complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
+    return render(request, "complaints_list.html", {"complaints": complaints, "filter": complaints_filter})

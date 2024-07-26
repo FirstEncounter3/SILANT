@@ -95,16 +95,16 @@ class Maintenance(models.Model):
 
 
 class Complaint(models.Model):
-    date_of_refusal = models.DateField(null=True)
-    operating_time = models.IntegerField()
-    failure_node = models.ForeignKey(FailureNode, on_delete=models.CASCADE)
-    description_of_failure = models.CharField(max_length=255)
-    recovery_method = models.ForeignKey(RecoveryMethod, on_delete=models.CASCADE)
-    parts_used = models.CharField(max_length=255)
-    recovery_date = models.DateField(null=True)
-    equipment_downtime = models.IntegerField()
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE)
+    date_of_refusal = models.DateField(null=True, verbose_name='Дата отказа')
+    operating_time = models.IntegerField(verbose_name='Наработка, м/час')
+    failure_node = models.ForeignKey(FailureNode, on_delete=models.CASCADE, verbose_name='Узел отказа')
+    description_of_failure = models.CharField(max_length=255, verbose_name='Описание отказа')
+    recovery_method = models.ForeignKey(RecoveryMethod, on_delete=models.CASCADE, verbose_name='Способ восстановления отказа')
+    parts_used = models.CharField(max_length=255, verbose_name='Использованные запчасти')
+    recovery_date = models.DateField(null=True, verbose_name='Дата восстановления отказа')
+    equipment_downtime = models.IntegerField(verbose_name='Время простоя')
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Машина')
+    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
 
     def __str__(self):
         return f"{self.failure_node} | {self.recovery_method} | {self.machine}"

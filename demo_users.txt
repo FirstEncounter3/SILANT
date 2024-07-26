@@ -1,2 +1,4 @@
-client_1:6uzNpriZ
-service_organization_1:6uzNpriX
+client_1:6uzNpriZ (Трудников ИП)
+client_2:6uzNpriC (ООО "ФПК21")
+service_organization_1:6uzNpriX (ООО Промышленная техника)
+service_organization_2:6uzNpriM (ООО Силант)

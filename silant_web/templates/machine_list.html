@@ -8,12 +8,8 @@
     <div class="result-wrapper">
         <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
         {% if machines %}
-        <form method="get" class="mb-4">
-            <h1>Фильтрация</h1>
-            {{ filter.form }}
-            <button type="submit">Фильтровать</button>
-        </form>
         {% include 'tabs.html' with active_tab='general' %}
+        {% include 'filter_form.html' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
                 <thead>
@@ -63,9 +59,9 @@
             </table>
         </div>
         {% else %}
+        {% include 'tabs.html' with active_tab='general' %}
         <div class="result-wrapper">
-            <span>У вас нет машин</span
-            >
+            <span>У вас нет машин</span>
         </div>
         {% endif %}
 </main>

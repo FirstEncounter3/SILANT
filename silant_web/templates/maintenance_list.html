@@ -6,11 +6,7 @@
         <h1>Информация обо всех заказах ТО</h1>
         {% include 'tabs.html' with active_tab='maintenance' %}
         {% if maintenances %}
-        <form method="get" class="mb-4">
-            <h1>Фильтрация</h1>
-            {{ filter.form }}
-            <button type="submit">Фильтровать</button>
-        </form>
+        {% include 'filter_form.html' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
                 <thead>
@@ -43,7 +39,7 @@
         <span>Заказов ТО нет в базе</span>
     </div>
     {% endif %}
-    <button class="create-button" id="create_maintenance">+</button>
+    <button class="create-button" id="create_maintenance">Создать</button>
     <a href="{% url 'machine_list' %}">Назад</a>
 </main>
 {% endblock content %}

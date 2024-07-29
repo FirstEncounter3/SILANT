@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.decorators import method_decorator
@@ -21,7 +22,12 @@ from .models import (
     Complaint,
 )
 
-from .forms import MaintenanceForm
+from .forms import (
+    MaintenanceForm,
+    ComplaintForm,
+)
+
+
 from .filters import (
     MachineFilter,
     MaintenanceFilter,
@@ -124,7 +130,9 @@ def machine_list(request):
     machine_filter = MachineFilter(request.GET, queryset=machines)
 
     return render(
-        request, "machine_list.html", {"machines": machines, "client": client, "filter": machine_filter}
+        request,
+        "machine_list.html",
+        {"machines": machines, "client": client, "filter": machine_filter},
     )
 
 
@@ -149,16 +157,22 @@ def machine_detail(request, machine_id):
 def maintenance_list(request):
     maintenances = Maintenance.objects.all()
     maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
-    return render(request, "maintenance_list.html", {"maintenances": maintenances, "filter": maintenances_filter})
+    return render(
+        request,
+        "maintenance_list.html",
+        {"maintenances": maintenances, "filter": maintenances_filter},
+    )
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(permission_required('core.add_maintenance', raise_exception=True), name='dispatch')
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.add_maintenance", raise_exception=True), name="dispatch"
+)
 class MaintenanceCreateView(CreateView):
     form_class = MaintenanceForm
     model = Maintenance
     template_name = "maintenance_create.html"
-    success_url = '/maintenances/'
+    success_url = "/maintenances/"
 
 
 @login_required
@@ -166,4 +180,24 @@ class MaintenanceCreateView(CreateView):
 def complaints_list(request):
     complaints = Complaint.objects.all()
     complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
-    return render(request, "complaints_list.html", {"complaints": complaints, "filter": complaints_filter})
+    can_add_complaints = request.user.has_perm("core.add_complaint")
+    return render(
+        request,
+        "complaints_list.html",
+        {
+            "complaints": complaints,
+            "filter": complaints_filter,
+            "can_add_complaint": can_add_complaints,
+        },
+    )
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.add_complaint", raise_exception=True), name="dispatch"
+)
+class ComplaintCreateView(CreateView):
+    form_class = ComplaintForm
+    model = Complaint
+    template_name = "complaint_create.html"
+    success_url = "/complaints/"

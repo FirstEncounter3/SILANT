@@ -152,4 +152,10 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+ACCOUNT_TEMPLATES = {
+    'login': 'account/login.html',
+    'logout': 'account/logout.html',
+}
+
+
 LOGIN_REDIRECT_URL = 'machine_list'

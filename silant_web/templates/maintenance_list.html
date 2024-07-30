@@ -39,7 +39,9 @@
         <span>Заказов ТО нет в базе</span>
     </div>
     {% endif %}
-    <button class="create-button" id="create_maintenance">Создать</button>
+    {% if can_add_maintenance %}
+        <button class="create-button" id="create_maintenance">Создать</button>
+    {% endif %}
     <a href="{% url 'machine_list' %}">Назад</a>
 </main>
 {% endblock content %}

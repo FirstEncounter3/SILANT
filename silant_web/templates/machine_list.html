@@ -64,5 +64,8 @@
             <span>У вас нет машин</span>
         </div>
         {% endif %}
+        {% if can_add_machine %}
+            <button class="create-button" id="create_machine">Создать</button>
+        {% endif %}  
 </main>
 {% endblock content %} 

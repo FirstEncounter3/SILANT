@@ -25,6 +25,7 @@ from .models import (
 from .forms import (
     MaintenanceForm,
     ComplaintForm,
+    MachineForm,
 )
 
 
@@ -128,11 +129,17 @@ def machine_list(request):
 
     machines = Machine.objects.filter(client=client)
     machine_filter = MachineFilter(request.GET, queryset=machines)
+    can_add_machine = request.user.has_perm('core.add_machine')
 
     return render(
         request,
         "machine_list.html",
-        {"machines": machines, "client": client, "filter": machine_filter},
+        {
+            "machines": machines,
+            "client": client, 
+            "filter": machine_filter,
+            "can_add_machine": can_add_machine,
+        },
     )
 
 
@@ -152,15 +159,31 @@ def machine_detail(request, machine_id):
     )
 
 
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.add_machine", raise_exception=True), name="dispatch"
+)
+class MachineCreateView(CreateView):
+    form_class = MachineForm
+    model = Machine
+    template_name = "machine_create.html"
+    success_url = "/machines/"
+
+
 @login_required
 @permission_required("core.view_maintenance", raise_exception=True)
 def maintenance_list(request):
     maintenances = Maintenance.objects.all()
     maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    can_add_maintenances = request.user.has_perm('core.add_maintenance')
     return render(
         request,
         "maintenance_list.html",
-        {"maintenances": maintenances, "filter": maintenances_filter},
+        {
+            "maintenances": maintenances, 
+            "filter": maintenances_filter,
+            "can_add_maintenance": can_add_maintenances
+        },
     )
 
 

@@ -36,12 +36,12 @@
                         {% endfor %}
                     </tbody>
                 </table>
-            {% endif %}
+                {% else %}
+                    <div class="result-wrapper">
+                        <span class="info-if-doesnt-exists">ТО для данной машины не обнаружено</span>
+                    </div>
+                {% endif %}
         </div>
-    </div>
-    {% else %}
-    <div class="result-wrapper">
-        <span>Данной машины нет в базе</span>
     </div>
     {% endif %}
     <a href="{% url 'machine_list' %}">Назад</a>

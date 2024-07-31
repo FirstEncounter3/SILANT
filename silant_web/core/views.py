@@ -120,16 +120,29 @@ def unauthorized_index(request):
 @permission_required("core.view_machine", raise_exception=True)
 def machine_list(request):
     user_id = request.user.id
+    can_add_machine = request.user.has_perm('core.add_machine')
+    can_update_machine = request.user.has_perm('core.change_machine')
+    can_delete_machine = request.user.has_perm('core.delete_machine')
+
     try:
         client = Client.objects.get(user_id=user_id)
     except Client.DoesNotExist:
+        machines = Machine.objects.all()
+        machine_filter = MachineFilter(request.GET, queryset=machines)
+        username = request.user.username
+
         return render(
-            request, "machine_list.html", {"error_message": "Client not found"}
+            request, "machine_list.html", {
+                "machines": machines,
+                "filter": machine_filter,
+                "can_add_machine": can_add_machine,
+                "can_update_machine": can_update_machine,
+                "username": username
+            }
         )
 
     machines = Machine.objects.filter(client=client)
     machine_filter = MachineFilter(request.GET, queryset=machines)
-    can_add_machine = request.user.has_perm('core.add_machine')
 
     return render(
         request,
@@ -139,6 +152,7 @@ def machine_list(request):
             "client": client, 
             "filter": machine_filter,
             "can_add_machine": can_add_machine,
+            "can_update_machine": can_update_machine,
         },
     )
 
@@ -147,15 +161,28 @@ def machine_list(request):
 @permission_required("core.view_machine", raise_exception=True)
 @permission_required("core.view_maintenance", raise_exception=True)
 def machine_detail(request, machine_id):
+    client = None
     try:
         machine = Machine.objects.get(id=machine_id)
     except Machine.DoesNotExist:
         return redirect("machine_list")
+
+    try: 
+        client = Client.objects.get(user_id=request.user.id)
+    except Client.DoesNotExist:
+        client = 'Гость'
+
     maintenances = Maintenance.objects.filter(machine_id=machine_id)
+
     return render(
         request,
         "machine_detail.html",
-        {"machine": machine, "maintenances": maintenances},
+        {
+            "machine": machine, 
+            "maintenances": maintenances,
+            "username": request.user.username,
+            "client": client,
+        },
     )
 
 
@@ -170,19 +197,39 @@ class MachineCreateView(CreateView):
     success_url = "/machines/"
 
 
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.change_machine", raise_exception=True), name="dispatch"
+)
+class MachineUpdateView(UpdateView):
+    form_class = MachineForm
+    model = Machine
+    template_name = "machine_create.html"
+    success_url = "/machines/"
+
 @login_required
 @permission_required("core.view_maintenance", raise_exception=True)
 def maintenance_list(request):
     maintenances = Maintenance.objects.all()
     maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    client = None
+
     can_add_maintenances = request.user.has_perm('core.add_maintenance')
+
+    try:
+        client = Client.objects.get(user_id=request.user.id)
+    except Client.DoesNotExist:
+        client = 'Гость'
+
     return render(
         request,
         "maintenance_list.html",
         {
             "maintenances": maintenances, 
             "filter": maintenances_filter,
-            "can_add_maintenance": can_add_maintenances
+            "can_add_maintenance": can_add_maintenances,
+            "username": request.user.username,
+            "client": client,
         },
     )
 
@@ -204,6 +251,14 @@ def complaints_list(request):
     complaints = Complaint.objects.all()
     complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
     can_add_complaints = request.user.has_perm("core.add_complaint")
+    client = None
+
+    try:
+        client = Client.objects.get(user_id=request.user.id)
+    except Client.DoesNotExist:
+        client = 'Гость'
+
+
     return render(
         request,
         "complaints_list.html",
@@ -211,6 +266,8 @@ def complaints_list(request):
             "complaints": complaints,
             "filter": complaints_filter,
             "can_add_complaint": can_add_complaints,
+            "username": request.user.username,
+            "client": client,
         },
     )
 

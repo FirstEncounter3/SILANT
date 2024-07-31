@@ -2,13 +2,10 @@
 {% block title %} Мой силант {% endblock title %} 
 {% block content %}
 <main class="main">
-    <div class="user-info">
-        <h1>{{ client.name }}</h1>
-    </div>
     <div class="result-wrapper">
         <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
-        {% if machines %}
         {% include 'tabs.html' with active_tab='general' %}
+        {% if machines %}
         {% include 'filter_form.html' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
@@ -31,6 +28,12 @@
                         <th>Комплектация (доп. опции)</th>
                         <th>Клиент</th>
                         <th>Сервисная компания</th>
+                        {% if can_update_machine %}
+                        <th>Изменить</th>
+                        {% endif %}
+                        {% if can_delete_machine %}
+                        <th>Удалить</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -53,15 +56,20 @@
                         <td>{{ machine.equipment }}</td>
                         <td>{{ machine.client }}</td>
                         <td>{{ machine.service_company }}</td>
+                        {% if can_update_machine %}
+                        <td><a href="{% url 'machine_update' machine.id %}">Изменить</a></td>
+                        {% endif %}
+                        {% if can_delete_machine %}
+                        <td><a href="{% url 'machine_delete' machine.id %}">Удалить</a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         {% else %}
-        {% include 'tabs.html' with active_tab='general' %}
         <div class="result-wrapper">
-            <span>У вас нет машин</span>
+            <span class="info-if-doesnt-exists">У вас нет машин</span>
         </div>
         {% endif %}
         {% if can_add_machine %}

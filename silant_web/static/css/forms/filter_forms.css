@@ -5,6 +5,11 @@ div > input, select {
     border: 1px solid #163E6C;
     width: 300px;
     margin-bottom: 10px;
+    width: 200px;
+}
+
+div > input {
+    width: 188px;
 }
 
 .right {
@@ -14,4 +19,10 @@ div > input, select {
     justify-content: center;
     align-items: flex-end;
     margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .right {
+        align-items: center;
+    }
 }

@@ -1,6 +1,7 @@
 {% extends 'base.html' %} 
 {% block title %} Мой силант {% endblock title %} 
 {% block content %}
+{% load static %}
 <main class="main">
     <div class="result-wrapper">
         <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
@@ -57,23 +58,35 @@
                         <td>{{ machine.client }}</td>
                         <td>{{ machine.service_company }}</td>
                         {% if can_update_machine %}
-                        <td><a href="{% url 'machine_update' machine.id %}">Изменить</a></td>
+                        <td>
+                            <a href="{% url 'machine_update' machine.id %}" class="edit-icon">
+                                <img src="{% static 'img/edit.svg' %}" alt="Изменить" width="24" height="24">
+                            </a>
+                        </td>
                         {% endif %}
                         {% if can_delete_machine %}
-                        <td><a href="{% url 'machine_delete' machine.id %}">Удалить</a></td>
+                         <td>
+                            {% csrf_token %}
+                            <button class="delete-icon delete-machine-btn" 
+                                data-machine-id="{{ machine.id }}"
+                                data-machine-token="{{ csrf_token }}">
+                                <img src="{% static 'img/delete.svg' %}" alt="Удалить" width="24" height="24">
+                            </button>
+                        </td>
                         {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        {% include 'modal.html' with modal_title='Удалить машину' %}
         {% else %}
         <div class="result-wrapper">
             <span class="info-if-doesnt-exists">У вас нет машин</span>
         </div>
         {% endif %}
         {% if can_add_machine %}
-            <button class="create-button" id="create_machine">Создать</button>
+            <button class="sign-button" id="create_machine">Создать</button>
         {% endif %}  
 </main>
 {% endblock content %} 

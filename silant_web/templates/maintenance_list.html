@@ -1,6 +1,7 @@
 {% extends 'base.html' %} 
 {% block title %} Мой силант {% endblock title %} 
 {% block content %}
+{% load static %}
 <main class="main">
     <div class="result-wrapper">
         <h1>Информация обо всех заказах ТО</h1>
@@ -17,6 +18,12 @@
                         <th>№ заказ-наряда</th>
                         <th>Дата заказ-наряда</th>
                         <th>Организация проводившая ТО</th>
+                        {% if can_update_maintenance %}
+                        <th>Изменить</th>
+                        {% endif %}
+                        {% if can_delete_maintenance %}
+                        <th>Удалить</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -28,11 +35,29 @@
                         <td>{{ maintenance.work_order_number }}</td>
                         <td>{{ maintenance.work_order_date }}</td>
                         <td>{{ maintenance.the_organization_that_carried_out_the_maintenance }}</td>
+                        {% if can_update_maintenance %}
+                        <td>
+                            <a href="{% url 'maintenance_update' maintenance.id %}" class="edit-icon">
+                                <img src="{% static 'img/edit.svg' %}" alt="Изменить" width="24" height="24">
+                            </a>
+                        </td>
+                        {% endif %}
+                        {% if can_delete_maintenance %}
+                        <td>
+                            {% csrf_token %}
+                            <button class="delete-icon delete-maintenance-btn" 
+                            data-maintenance-id="{{ maintenance.id }}"
+                            data-maintenance-token="{{ csrf_token }}">
+                                <img src="{% static 'img/delete.svg' %}" alt="Удалить" width="24" height="24">
+                            </button>
+                        </td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        {% include 'modal.html' with modal_title='Удалить ТО' %}
     </div>
     {% else %}
     <div class="result-wrapper">
@@ -40,8 +65,8 @@
     </div>
     {% endif %}
     {% if can_add_maintenance %}
-        <button class="create-button" id="create_maintenance">Создать</button>
+        <button class="sign-button" id="create_maintenance">Создать</button>
     {% endif %}
-    <a href="{% url 'machine_list' %}">Назад</a>
+    <a href="{% url 'machine_list' %}" class="back-href">Назад</a>
 </main>
 {% endblock content %}

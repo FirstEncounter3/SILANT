@@ -2,6 +2,7 @@ from typing import Any
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse, HttpResponseNotAllowed
 
 from django.views.generic import (
     ListView,
@@ -120,9 +121,9 @@ def unauthorized_index(request):
 @permission_required("core.view_machine", raise_exception=True)
 def machine_list(request):
     user_id = request.user.id
-    can_add_machine = request.user.has_perm('core.add_machine')
-    can_update_machine = request.user.has_perm('core.change_machine')
-    can_delete_machine = request.user.has_perm('core.delete_machine')
+    can_add_machine = request.user.has_perm("core.add_machine")
+    can_update_machine = request.user.has_perm("core.change_machine")
+    can_delete_machine = request.user.has_perm("core.delete_machine")
 
     try:
         client = Client.objects.get(user_id=user_id)
@@ -132,13 +133,16 @@ def machine_list(request):
         username = request.user.username
 
         return render(
-            request, "machine_list.html", {
+            request,
+            "machine_list.html",
+            {
                 "machines": machines,
                 "filter": machine_filter,
                 "can_add_machine": can_add_machine,
                 "can_update_machine": can_update_machine,
-                "username": username
-            }
+                "can_delete_machine": can_delete_machine,
+                "username": username,
+            },
         )
 
     machines = Machine.objects.filter(client=client)
@@ -149,12 +153,37 @@ def machine_list(request):
         "machine_list.html",
         {
             "machines": machines,
-            "client": client, 
+            "client": client,
             "filter": machine_filter,
             "can_add_machine": can_add_machine,
             "can_update_machine": can_update_machine,
+            "can_delete_machine": can_delete_machine,
         },
     )
+
+
+@login_required
+@permission_required("core.delete_machine", raise_exception=True)
+def machine_delete(request, machine_id):
+    if request.method == "DELETE":
+        try:
+            machine = Machine.objects.get(id=machine_id)
+            if request.user.has_perm("core.delete_machine"):
+                machine.delete()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "error": "Недостаточно прав для удаления машины.",
+                    },
+                    status=403,
+                )
+        except Machine.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "error": "Машина не найдена."}, status=404
+            )
+    return HttpResponseNotAllowed(["DELETE"])
 
 
 @login_required
@@ -167,10 +196,10 @@ def machine_detail(request, machine_id):
     except Machine.DoesNotExist:
         return redirect("machine_list")
 
-    try: 
+    try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = 'Гость'
+        client = "Гость"
 
     maintenances = Maintenance.objects.filter(machine_id=machine_id)
 
@@ -178,7 +207,7 @@ def machine_detail(request, machine_id):
         request,
         "machine_detail.html",
         {
-            "machine": machine, 
+            "machine": machine,
             "maintenances": maintenances,
             "username": request.user.username,
             "client": client,
@@ -207,6 +236,7 @@ class MachineUpdateView(UpdateView):
     template_name = "machine_create.html"
     success_url = "/machines/"
 
+
 @login_required
 @permission_required("core.view_maintenance", raise_exception=True)
 def maintenance_list(request):
@@ -214,24 +244,52 @@ def maintenance_list(request):
     maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
     client = None
 
-    can_add_maintenances = request.user.has_perm('core.add_maintenance')
+    can_add_maintenances = request.user.has_perm("core.add_maintenance")
+    can_update_maintenance = request.user.has_perm("core.change_maintenance")
+    can_delete_maintenance = request.user.has_perm("core.delete_maintenance")
 
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = 'Гость'
+        client = "Гость"
 
     return render(
         request,
         "maintenance_list.html",
         {
-            "maintenances": maintenances, 
+            "maintenances": maintenances,
             "filter": maintenances_filter,
             "can_add_maintenance": can_add_maintenances,
+            "can_update_maintenance": can_update_maintenance,
+            "can_delete_maintenance": can_delete_maintenance,
             "username": request.user.username,
             "client": client,
         },
     )
+
+
+@login_required
+@permission_required("core.delete_maintenance", raise_exception=True)
+def maintenance_delete(request, maintenance_id):
+    if request.method == "DELETE":
+        try:
+            maintenance = Maintenance.objects.get(id=maintenance_id)
+            if request.user.has_perm("core.delete_maintenance"):
+                maintenance.delete()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "error": "Не хватает прав для удаления обслуживания",
+                    },
+                    status=403,
+                )
+        except Maintenance.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "error": "Обслуживание не найдено"}, status=404
+            )
+    return HttpResponseNotAllowed(["DELETE"])
 
 
 @method_decorator(login_required, name="dispatch")
@@ -245,19 +303,32 @@ class MaintenanceCreateView(CreateView):
     success_url = "/maintenances/"
 
 
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.change_maintenance", raise_exception=True),
+    name="dispatch",
+)
+class MaintenanceUpdateView(UpdateView):
+    form_class = MaintenanceForm
+    model = Maintenance
+    template_name = "maintenance_create.html"
+    success_url = "/maintenances/"
+
+
 @login_required
 @permission_required("core.view_complaint", raise_exception=True)
 def complaints_list(request):
     complaints = Complaint.objects.all()
     complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
     can_add_complaints = request.user.has_perm("core.add_complaint")
+    can_update_complaints = request.user.has_perm("core.change_complaint")
+    can_delete_complaints = request.user.has_perm("core.delete_complaint")
     client = None
 
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = 'Гость'
-
+        client = "Гость"
 
     return render(
         request,
@@ -266,6 +337,8 @@ def complaints_list(request):
             "complaints": complaints,
             "filter": complaints_filter,
             "can_add_complaint": can_add_complaints,
+            "can_update_complaint": can_update_complaints,
+            "can_delete_complaint": can_delete_complaints,
             "username": request.user.username,
             "client": client,
         },
@@ -281,3 +354,38 @@ class ComplaintCreateView(CreateView):
     model = Complaint
     template_name = "complaint_create.html"
     success_url = "/complaints/"
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("core.change_complaint", raise_exception=True),
+    name="dispatch",
+)
+class ComplaintUpdateView(UpdateView):
+    form_class = ComplaintForm
+    model = Complaint
+    template_name = "complaint_create.html"
+    success_url = "/complaints/"
+
+@login_required
+@permission_required("core.delete_complaint", raise_exception=True)
+def complaint_delete(request, complaint_id):
+    if request.method == "DELETE":
+        try:
+            complaint = Complaint.objects.get(id=complaint_id)
+            if request.user.has_perm("core.delete_complaint"):
+                complaint.delete()
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "error": "Не хватает прав для удаления рекламации",
+                    },
+                    status=403,
+                )
+        except Complaint.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "error": "Рекламация не найдена"}, status=404
+            )
+    return HttpResponseNotAllowed(["DELETE"])

@@ -76,6 +76,9 @@ class Machine(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Клиент')
     service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
 
+    class Meta:
+        ordering = ['-date_shipped_from_factory']
+
     def __str__(self):
         return f'{self.serial_number_of_machine} | {self.model_of_equipment} | {self.client}'
 
@@ -89,6 +92,9 @@ class Maintenance(models.Model):
     the_organization_that_carried_out_the_maintenance = models.CharField(max_length=255, verbose_name='Организация, проводившая ТО')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Машина')
     service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
+
+    class Meta:
+        ordering = ['-maintenance_date']
 
     def __str__(self):
         return f"{self.maintenance_type} | {self.machine} | {self.maintenance_date} | {self.machine}"
@@ -105,6 +111,9 @@ class Complaint(models.Model):
     equipment_downtime = models.IntegerField(verbose_name='Время простоя')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Машина')
     service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
+
+    class Meta:
+        ordering = ['-date_of_refusal']
 
     def __str__(self):
         return f"{self.failure_node} | {self.recovery_method} | {self.machine}"

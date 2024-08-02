@@ -7,7 +7,7 @@
         <h1>Информация о комплектации и технических характеристиках вашей техники</h1>
         {% include 'tabs.html' with active_tab='general' %}
         {% if machines %}
-        {% include 'filter_form.html' %}
+        {% include 'forms/filter_form.html' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
                 <thead>
@@ -41,7 +41,14 @@
                     {% for machine in filter.qs %}
                     <tr>
                         <td><a href="{% url 'machine_detail' machine.id %}">{{ machine.serial_number_of_machine }}</a></td>
-                        <td>{{ machine.model_of_equipment }}</a></td>
+                        <td>
+                            <button class="summary-button"
+                                data-equipment-id="{{ machine.model_of_equipment.id }}"
+                                title="Просмотреть информацию">
+                                    {{ machine.model_of_equipment }}
+                                    <img src="{% static 'img/eye.svg' %}" alt="Просмотреть" width="16" height="16">
+                            </button>
+                        </td>
                         <td>{{ machine.model_of_engine }}</td>
                         <td>{{ machine.serial_number_of_engine }}</td>
                         <td>{{ machine.transmission_model }}</td>
@@ -59,7 +66,7 @@
                         <td>{{ machine.service_company }}</td>
                         {% if can_update_machine %}
                         <td>
-                            <a href="{% url 'machine_update' machine.id %}" class="edit-icon">
+                            <a href="{% url 'machine_update' machine.id %}" class="edit-icon" title="Изменить">
                                 <img src="{% static 'img/edit.svg' %}" alt="Изменить" width="24" height="24">
                             </a>
                         </td>
@@ -69,7 +76,9 @@
                             {% csrf_token %}
                             <button class="delete-icon delete-machine-btn" 
                                 data-machine-id="{{ machine.id }}"
-                                data-machine-token="{{ csrf_token }}">
+                                data-machine-token="{{ csrf_token }}"
+                                title="Удалить"
+                                >
                                 <img src="{% static 'img/delete.svg' %}" alt="Удалить" width="24" height="24">
                             </button>
                         </td>
@@ -79,7 +88,8 @@
                 </tbody>
             </table>
         </div>
-        {% include 'modal.html' with modal_title='Удалить машину' %}
+        {% include 'modals/modal_delete.html' with modal_title='Удалить машину' %}
+        {% include 'modals/modal_info.html' %}
         {% else %}
         <div class="result-wrapper">
             <span class="info-if-doesnt-exists">У вас нет машин</span>

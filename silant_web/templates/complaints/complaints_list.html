@@ -7,7 +7,7 @@
         <h1>Информация о доступных рекламациях</h1>
         {% include 'tabs.html' with active_tab='complaint' %}
         {% if complaints %}
-        {% include 'filter_form.html' %}
+        {% include 'forms/filter_form.html' %}
         <div class="adaptive-table-wrapper">
                 <table class="adaptive-table">
                     <thead>
@@ -65,7 +65,8 @@
                     </tbody>
                 </table>
         </div>
-        {% include 'modal.html' with modal_title='Удалить Рекламацию' %}
+        {% include 'modals/modal_delete.html' with modal_title='Удалить Рекламацию' %}
+        {% include 'modals/modals/modal_info.html' %}
     </div>
     {% else %}
     <div class="result-wrapper">

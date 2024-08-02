@@ -7,7 +7,7 @@
         <h1>Информация обо всех заказах ТО</h1>
         {% include 'tabs.html' with active_tab='maintenance' %}
         {% if maintenances %}
-        {% include 'filter_form.html' %}
+        {% include 'forms/filter_form.html' %}
         <div class="adaptive-table-wrapper">
             <table class="adaptive-table">
                 <thead>
@@ -57,7 +57,8 @@
                 </tbody>
             </table>
         </div>
-        {% include 'modal.html' with modal_title='Удалить ТО' %}
+        {% include 'modals/modal_delete.html' with modal_title='Удалить ТО' %}
+        {% include 'modals/modal_info.html' %}
     </div>
     {% else %}
     <div class="result-wrapper">

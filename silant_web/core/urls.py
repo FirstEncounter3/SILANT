@@ -15,6 +15,7 @@ from .views import (
     ComplaintCreateView,
     ComplaintUpdateView,
     complaint_delete,
+    equipment_model_info,
 )
 
 urlpatterns = [
@@ -32,4 +33,5 @@ urlpatterns = [
     path('complaints/create/', ComplaintCreateView.as_view(), name='complaint_create'),
     path('complaints/update/<int:pk>/', ComplaintUpdateView.as_view(), name='complaint_update'),
     path('complaints/delete/<int:complaint_id>/', complaint_delete, name='complaint_delete'),
+    path('machines/equipment_model_info/<int:equipment_model_id>/', equipment_model_info, name='equipment_model_info'),
 ]

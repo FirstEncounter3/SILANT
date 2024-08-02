@@ -9,6 +9,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    DetailView,
 )
 
 from .models import (
@@ -20,6 +21,10 @@ from .models import (
     TransmissionModel,
     DriveAxleModel,
     SteeringAxleModel,
+    ServiceCompany,
+    MaintenanceType,
+    FailureNode,
+    RecoveryMethod,
     Complaint,
 )
 
@@ -102,7 +107,7 @@ def unauthorized_index(request):
         ):
             return render(
                 request,
-                "index.html",
+                "main/index.html",
                 {
                     "machine": machine,
                     "model_of_equipment_name": model_of_equipment_name["name"],
@@ -113,8 +118,8 @@ def unauthorized_index(request):
                 },
             )
         else:
-            return render(request, "index.html", {"error_message": "Not found"})
-    return render(request, "index.html")
+            return render(request, "main/index.html", {"error_message": "Not found"})
+    return render(request, "main/index.html")
 
 
 @login_required
@@ -134,7 +139,7 @@ def machine_list(request):
 
         return render(
             request,
-            "machine_list.html",
+            "machine/machine_list.html",
             {
                 "machines": machines,
                 "filter": machine_filter,
@@ -150,7 +155,7 @@ def machine_list(request):
 
     return render(
         request,
-        "machine_list.html",
+        "machine/machine_list.html",
         {
             "machines": machines,
             "client": client,
@@ -205,7 +210,7 @@ def machine_detail(request, machine_id):
 
     return render(
         request,
-        "machine_detail.html",
+        "machine/machine_detail.html",
         {
             "machine": machine,
             "maintenances": maintenances,
@@ -222,7 +227,7 @@ def machine_detail(request, machine_id):
 class MachineCreateView(CreateView):
     form_class = MachineForm
     model = Machine
-    template_name = "machine_create.html"
+    template_name = "machine/machine_create.html"
     success_url = "/machines/"
 
 
@@ -233,7 +238,7 @@ class MachineCreateView(CreateView):
 class MachineUpdateView(UpdateView):
     form_class = MachineForm
     model = Machine
-    template_name = "machine_create.html"
+    template_name = "machine/machine_create.html"
     success_url = "/machines/"
 
 
@@ -255,7 +260,7 @@ def maintenance_list(request):
 
     return render(
         request,
-        "maintenance_list.html",
+        "maintenance/maintenance_list.html",
         {
             "maintenances": maintenances,
             "filter": maintenances_filter,
@@ -299,7 +304,7 @@ def maintenance_delete(request, maintenance_id):
 class MaintenanceCreateView(CreateView):
     form_class = MaintenanceForm
     model = Maintenance
-    template_name = "maintenance_create.html"
+    template_name = "maintenance/maintenance_create.html"
     success_url = "/maintenances/"
 
 
@@ -311,7 +316,7 @@ class MaintenanceCreateView(CreateView):
 class MaintenanceUpdateView(UpdateView):
     form_class = MaintenanceForm
     model = Maintenance
-    template_name = "maintenance_create.html"
+    template_name = "maintenance/maintenance_create.html"
     success_url = "/maintenances/"
 
 
@@ -332,7 +337,7 @@ def complaints_list(request):
 
     return render(
         request,
-        "complaints_list.html",
+        "complaints/complaints_list.html",
         {
             "complaints": complaints,
             "filter": complaints_filter,
@@ -352,7 +357,7 @@ def complaints_list(request):
 class ComplaintCreateView(CreateView):
     form_class = ComplaintForm
     model = Complaint
-    template_name = "complaint_create.html"
+    template_name = "complaints/complaint_create.html"
     success_url = "/complaints/"
 
 
@@ -364,7 +369,7 @@ class ComplaintCreateView(CreateView):
 class ComplaintUpdateView(UpdateView):
     form_class = ComplaintForm
     model = Complaint
-    template_name = "complaint_create.html"
+    template_name = "complaints/complaint_create.html"
     success_url = "/complaints/"
 
 @login_required
@@ -389,3 +394,16 @@ def complaint_delete(request, complaint_id):
                 {"success": False, "error": "Рекламация не найдена"}, status=404
             )
     return HttpResponseNotAllowed(["DELETE"])
+
+def equipment_model_info(request, equipment_model_id):
+    if request.method == "GET":
+        try:
+            equipment_model_info = EquipmentModel.objects.get(id=equipment_model_id)
+            data = {
+                "name": equipment_model_info.name,
+                "description": equipment_model_info.description
+            }
+            return JsonResponse(data)
+        except EquipmentModel.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])

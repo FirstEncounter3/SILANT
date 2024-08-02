@@ -23,9 +23,35 @@
     width: 30%;
 }
 
+.content-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.content-body-label-p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.content-body-label-p > label {
+    margin-right: 10px;
+}
+
 .modal-buttons {
     display: flex;
     flex-direction: column;
+}
+
+.modal-header {
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
 }
 
 .close-button {
@@ -42,4 +68,12 @@
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 80%;
+    }
+    
 }

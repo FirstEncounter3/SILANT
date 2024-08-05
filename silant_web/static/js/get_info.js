@@ -13,15 +13,42 @@ function showSummaryModal(summaryUrl) {
         document.getElementById("summary-modal").style.display = "none";
     });
 
-    document.getElementsByClassName("close-button")[1].addEventListener("click", () => {
-        console.log("close");
+    document.getElementById('close-button-modal-info').addEventListener("click", () => {
         document.getElementById("summary-modal").style.display = "none";
     });
 }
 
-document.querySelectorAll(".summary-button").forEach(button => {
+document.querySelectorAll(".model-of-equipment").forEach(button => {
     button.addEventListener("click", () => {
-        const summaryUrl = `equipment_model_info/${button.dataset.equipmentId}`;
+        const summaryUrl = `machines/equipment_model_info/${button.dataset.objectId}`;
+        showSummaryModal(summaryUrl);
+    });
+})
+
+document.querySelectorAll(".model-of-engine").forEach(button => {
+    button.addEventListener("click", () => {
+        const summaryUrl = `machines/engine_model_info/${button.dataset.objectId}`;
+        showSummaryModal(summaryUrl);
+    });
+})
+
+document.querySelectorAll(".model-of-transmission").forEach(button => {
+    button.addEventListener("click", () => {
+        const summaryUrl = `machines/transmission_model_info/${button.dataset.objectId}`;
+        showSummaryModal(summaryUrl);
+    });
+})
+
+document.querySelectorAll(".model-of-drive-axle").forEach(button => {
+    button.addEventListener("click", () => {
+        const summaryUrl = `machines/drive_axle_model_info/${button.dataset.objectId}`;
+        showSummaryModal(summaryUrl);
+    });
+})
+
+document.querySelectorAll(".model-of-steering-axle").forEach(button => {
+    button.addEventListener("click", () => {
+        const summaryUrl = `machines/steering_axle_model_info/${button.dataset.objectId}`;
         showSummaryModal(summaryUrl);
     });
 })

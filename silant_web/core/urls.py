@@ -16,6 +16,10 @@ from .views import (
     ComplaintUpdateView,
     complaint_delete,
     equipment_model_info,
+    engine_model_info,
+    transmission_model_info,
+    drive_axle_model_info,
+    steering_axle_model_info,
 )
 
 urlpatterns = [
@@ -34,4 +38,8 @@ urlpatterns = [
     path('complaints/update/<int:pk>/', ComplaintUpdateView.as_view(), name='complaint_update'),
     path('complaints/delete/<int:complaint_id>/', complaint_delete, name='complaint_delete'),
     path('machines/equipment_model_info/<int:equipment_model_id>/', equipment_model_info, name='equipment_model_info'),
+    path('machines/engine_model_info/<int:engine_model_id>/', engine_model_info, name='engine_model_info'),
+    path('machines/transmission_model_info/<int:transmission_model_id>/', transmission_model_info, name='transmission_model_info'),
+    path('machines/drive_axle_model_info/<int:drive_axle_model_id>/', drive_axle_model_info, name='drive_axle_model_info'),
+    path('machines/steering_axle_model_info/<int:steering_axle_model_id>/', steering_axle_model_info, name='steering_axle_model_info'),
 ]

@@ -1,6 +1,7 @@
 {% extends 'base.html' %} 
 {% block title %} Мой силант {% endblock title %} 
 {% block content %}
+{% load static %}
 <main class="main">
   <h1>Проверьте комплектацию и технически характеристики техники Силант</h1>
   <form action="" method="POST" class="get-machine">
@@ -32,18 +33,29 @@
                 </tr>
                 <tr>
                     <td>{{ machine.serial_number_of_machine }}</td>
-                    <td>{{ model_of_equipment_name }}</td>
-                    <td>{{ model_of_engine_name }}</td>
+                    <td>
+                      {% include 'button/button.html' with object_class='model-of-equipment' object_id=model_of_equipment_id object_name=model_of_equipment_name %}
+                    </td>
+                    <td>
+                      {% include 'button/button.html' with object_class='model-of-engine' object_id=model_of_engine_id object_name=model_of_engine_name %}
+                    </td>
                     <td>{{ machine.serial_number_of_engine }}</td>
-                    <td>{{ model_of_transmission_name }}</td>
+                    <td>
+                      {% include 'button/button.html' with object_class='model-of-transmission' object_id=model_of_transmission_id object_name=model_of_transmission_name %}
+                    </td>
                     <td>{{ machine.serial_number_of_transmission }}</td>
-                    <td>{{ model_of_drive_axle_name }}</td>
+                    <td>
+                      {% include 'button/button.html' with object_class='model-of-drive-axle' object_id=model_of_drive_axle_id object_name=model_of_drive_axle_name %}
+                    </td>
                     <td>{{ machine.serial_number_of_drive_axle }}</td>
-                    <td>{{ model_of_steering_axle_name }}</td>
+                    <td>
+                      {% include 'button/button.html' with object_class='model-of-steering-axle' object_id=model_of_steering_axle_id object_name=model_of_steering_axle_name %}
+                    </td>
                     <td>{{ machine.serial_number_of_steering_axle }}</td>
                 </tr>
             </table>
         </div>
+        {% include 'modals/modal_info.html' %}
     </div>
     {% else %}
     <div class="result-wrapper">

@@ -43,6 +43,21 @@
     font-size: 14px;
 }
 
+.bold {
+    font-weight: 600;
+}
+
+.summary-button {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.mg-lft {
+    margin-left: 50px;
+}
+
 .adaptive-table-wrapper {
     margin-top: 20px;
     width: 100%;

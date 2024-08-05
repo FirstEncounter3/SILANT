@@ -69,31 +69,31 @@ def unauthorized_index(request):
 
         model_of_equipment_name = (
             EquipmentModel.objects.filter(id=machine["model_of_equipment"])
-            .values("name")
+            .values("id", "name")
             .first()
         )
 
         model_of_engine_name = (
             EngineModel.objects.filter(id=machine["model_of_engine"])
-            .values("name")
+            .values("id", "name")
             .first()
         )
 
         model_of_transmission_name = (
             TransmissionModel.objects.filter(id=machine["transmission_model"])
-            .values("name")
+            .values("id", "name")
             .first()
         )
 
         model_of_drive_axle_name = (
             DriveAxleModel.objects.filter(id=machine["drive_axle_model"])
-            .values("name")
+            .values("id", "name")
             .first()
         )
 
         model_of_steering_axle_name = (
             SteeringAxleModel.objects.filter(id=machine["steering_axle_model"])
-            .values("name")
+            .values("id", "name")
             .first()
         )
 
@@ -111,10 +111,15 @@ def unauthorized_index(request):
                 {
                     "machine": machine,
                     "model_of_equipment_name": model_of_equipment_name["name"],
+                    "model_of_equipment_id": model_of_equipment_name["id"],
                     "model_of_engine_name": model_of_engine_name["name"],
+                    "model_of_engine_id": model_of_engine_name["id"],
                     "model_of_transmission_name": model_of_transmission_name["name"],
+                    "model_of_transmission_id": model_of_transmission_name["id"],
                     "model_of_drive_axle_name": model_of_drive_axle_name["name"],
+                    "model_of_drive_axle_id": model_of_drive_axle_name["id"],
                     "model_of_steering_axle_name": model_of_steering_axle_name["name"],
+                    "model_of_steering_axle_id": model_of_steering_axle_name["id"],
                 },
             )
         else:
@@ -405,5 +410,61 @@ def equipment_model_info(request, equipment_model_id):
             }
             return JsonResponse(data)
         except EquipmentModel.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def engine_model_info(request, engine_model_id):
+    if request.method == "GET":
+        try:
+            engine_model_info = EngineModel.objects.get(id=engine_model_id)
+            data = {
+                "name": engine_model_info.name,
+                "description": engine_model_info.description
+            }
+            return JsonResponse(data)
+        except EngineModel.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def transmission_model_info(request, transmission_model_id):
+    if request.method == "GET":
+        try:
+            transmission_model_info = TransmissionModel.objects.get(id=transmission_model_id)
+            data = {
+                "name": transmission_model_info.name,
+                "description": transmission_model_info.description
+            }
+            return JsonResponse(data)
+        except EngineModel.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def drive_axle_model_info(request, drive_axle_model_id):
+    if request.method == "GET":
+        try:
+            drive_axle_model_info = DriveAxleModel.objects.get(id=drive_axle_model_id)
+            data = {
+                "name": drive_axle_model_info.name,
+                "description": drive_axle_model_info.description
+            }
+            return JsonResponse(data)
+        except EngineModel.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def steering_axle_model_info(request, steering_axle_model_id):
+    if request.method == "GET":
+        try:
+            steering_axle_model_info = SteeringAxleModel.objects.get(id=steering_axle_model_id)
+            data = {
+                "name": steering_axle_model_info.name,
+                "description": steering_axle_model_info.description
+            }
+            return JsonResponse(data)
+        except EngineModel.DoesNotExist:
             return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
     return HttpResponseNotAllowed(["GET"])

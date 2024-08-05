@@ -27,7 +27,7 @@ function showDeleteModal(deleteUrl, itemName, csrfToken) {
         document.getElementById("delete-modal").style.display = "none";
     });
 
-    document.getElementsByClassName("close-button")[0].addEventListener("click", () => {
+    document.getElementById('close-button-modal-delete').addEventListener("click", () => {
         document.getElementById("delete-modal").style.display = "none";
     });
 }

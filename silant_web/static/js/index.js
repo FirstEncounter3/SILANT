@@ -6,32 +6,38 @@ const createComplaintButton = document.getElementById('create_complaint');
 const createMachineButton = document.getElementById('create_machine');
 
 
-complaintButton.addEventListener('click', () => {
-    window.location.href = '/complaints/';
-});
+if (complaintButton) {
+    complaintButton.addEventListener('click', () => {
+        window.location.href = '/complaints/';
+    });
+};
 
-generalButton.addEventListener('click', () => {
-    window.location.href = '/machines/';
-});
+if (generalButton) {
+    generalButton.addEventListener('click', () => {
+        window.location.href = '/machines/';
+    });
+};
 
-maintenanceButton.addEventListener('click', () => {
-    window.location.href = '/maintenances/';
-})
+if (maintenanceButton) {
+    maintenanceButton.addEventListener('click', () => {
+        window.location.href = '/maintenances/';
+    });
+};
 
 if (createMaintenanceButton) {
     createMaintenanceButton.addEventListener('click', () => {
         window.location.href = '/maintenances/create/';
-    })
-}
+    });
+};
 
 if (createComplaintButton) {
     createComplaintButton.addEventListener('click', () => {
         window.location.href = '/complaints/create/';
-    })
-}
+    });
+};
 
 if (createMachineButton) {
     createMachineButton.addEventListener('click', () => {
         window.location.href = '/machines/create/';
-    })
-}
+    });
+};

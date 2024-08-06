@@ -1,3 +1,5 @@
+const currentUrl = window.location.href;
+
 function showSummaryModal(summaryUrl) {
     document.getElementById("summary-modal").style.display = "block";
     fetch(summaryUrl).then(response => response.json()).then(data => {
@@ -18,37 +20,52 @@ function showSummaryModal(summaryUrl) {
     });
 }
 
-document.querySelectorAll(".model-of-equipment").forEach(button => {
-    button.addEventListener("click", () => {
-        const summaryUrl = `machines/equipment_model_info/${button.dataset.objectId}`;
+const buttonInit = (button, includePath, urlPath) => {
+    if (currentUrl.includes(includePath)) {
+        let summaryUrl = `${urlPath}${button.dataset.objectId}`;
         showSummaryModal(summaryUrl);
-    });
+    } else {
+        let summaryUrl = `${includePath}${urlPath}${button.dataset.objectId}`;
+        showSummaryModal(summaryUrl);
+    }
+}
+
+document.querySelectorAll(".model-of-equipment").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'equipment_model_info/'));
 })
 
 document.querySelectorAll(".model-of-engine").forEach(button => {
-    button.addEventListener("click", () => {
-        const summaryUrl = `machines/engine_model_info/${button.dataset.objectId}`;
-        showSummaryModal(summaryUrl);
-    });
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'engine_model_info/'));
 })
 
 document.querySelectorAll(".model-of-transmission").forEach(button => {
-    button.addEventListener("click", () => {
-        const summaryUrl = `machines/transmission_model_info/${button.dataset.objectId}`;
-        showSummaryModal(summaryUrl);
-    });
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'transmission_model_info/'));
 })
 
 document.querySelectorAll(".model-of-drive-axle").forEach(button => {
-    button.addEventListener("click", () => {
-        const summaryUrl = `machines/drive_axle_model_info/${button.dataset.objectId}`;
-        showSummaryModal(summaryUrl);
-    });
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'drive_axle_model_info/'));
 })
 
 document.querySelectorAll(".model-of-steering-axle").forEach(button => {
-    button.addEventListener("click", () => {
-        const summaryUrl = `machines/steering_axle_model_info/${button.dataset.objectId}`;
-        showSummaryModal(summaryUrl);
-    });
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'steering_axle_model_info/'));
+})
+
+document.querySelectorAll(".client-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'client_info/'));
+})
+
+document.querySelectorAll(".service-company-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'machines/', 'service_company_info/'));
+})
+
+document.querySelectorAll(".maintenance-type-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'maintenances/', 'maintenance_type_info/'));
+})
+
+document.querySelectorAll(".failure-node-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'complaints/', 'failure_node_info/'));
+})
+
+document.querySelectorAll(".recovery-method-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'complaints/', 'recovery_method_info/'));
 })

@@ -468,3 +468,73 @@ def steering_axle_model_info(request, steering_axle_model_id):
         except EngineModel.DoesNotExist:
             return JsonResponse({"success": False, "error": "Модель не найдена"}, status=404)
     return HttpResponseNotAllowed(["GET"])
+
+
+def client_info(request, client_id):
+    if request.method == "GET":
+        try:
+            client_info = Client.objects.get(id=client_id)
+            data = {
+                "name": client_info.name,
+                "description": client_info.description
+            }
+            return JsonResponse(data)
+        except Client.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Клиент не найден"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def service_company_info(request, service_company_id):
+    if request.method == "GET":
+        try:
+            service_company_info = ServiceCompany.objects.get(id=service_company_id)
+            data = {
+                "name": service_company_info.name,
+                "description": service_company_info.description
+            }
+            return JsonResponse(data)
+        except ServiceCompany.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Компания не найдена"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def maintenance_type_info(request, maintenance_type_id):
+    if request.method == "GET":
+        try:
+            maintenance_type_info = MaintenanceType.objects.get(id=maintenance_type_id)
+            data = {
+                "name": maintenance_type_info.name,
+                "description": maintenance_type_info.description
+            }
+            return JsonResponse(data)
+        except MaintenanceType.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Тип не найден"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def failure_node_info(request, failure_node_id):
+    if request.method == "GET":
+        try:
+            failure_node_info = FailureNode.objects.get(id=failure_node_id)
+            data = {
+                "name": failure_node_info.name,
+                "description": failure_node_info.description
+            }
+            return JsonResponse(data)
+        except FailureNode.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Узел не найден"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+
+def recovery_method_info(request, recovery_method_id):
+    if request.method == "GET":
+        try:
+            recovery_method_info = RecoveryMethod.objects.get(id=recovery_method_id)
+            data = {
+                "name": recovery_method_info.name,
+                "description": recovery_method_info.description
+            }
+            return JsonResponse(data)
+        except RecoveryMethod.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Метод восстановления не найден"}, status=404)
+    return HttpResponseNotAllowed(["GET"])

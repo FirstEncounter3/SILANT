@@ -20,6 +20,11 @@ from .views import (
     transmission_model_info,
     drive_axle_model_info,
     steering_axle_model_info,
+    client_info,
+    service_company_info,
+    maintenance_type_info,
+    failure_node_info,
+    recovery_method_info,
 )
 
 urlpatterns = [
@@ -37,9 +42,17 @@ urlpatterns = [
     path('complaints/create/', ComplaintCreateView.as_view(), name='complaint_create'),
     path('complaints/update/<int:pk>/', ComplaintUpdateView.as_view(), name='complaint_update'),
     path('complaints/delete/<int:complaint_id>/', complaint_delete, name='complaint_delete'),
+
     path('machines/equipment_model_info/<int:equipment_model_id>/', equipment_model_info, name='equipment_model_info'),
     path('machines/engine_model_info/<int:engine_model_id>/', engine_model_info, name='engine_model_info'),
     path('machines/transmission_model_info/<int:transmission_model_id>/', transmission_model_info, name='transmission_model_info'),
     path('machines/drive_axle_model_info/<int:drive_axle_model_id>/', drive_axle_model_info, name='drive_axle_model_info'),
     path('machines/steering_axle_model_info/<int:steering_axle_model_id>/', steering_axle_model_info, name='steering_axle_model_info'),
+    path('machines/client_info/<int:client_id>/', client_info, name='client_info'),
+    path('machines/service_company_info/<int:service_company_id>/', service_company_info, name='service_company_info'),
+
+    path('maintenances/maintenance_type_info/<int:maintenance_type_id>/', maintenance_type_info, name='maintenance_type_info'),
+
+    path('complaints/failure_node_info/<int:failure_node_id>/', failure_node_info, name='failure_node_info'),
+    path('complaints/recovery_method_info/<int:recovery_method_id>/', recovery_method_info, name='recovery_method_info'),
 ]

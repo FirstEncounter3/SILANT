@@ -40,30 +40,42 @@
                 <tbody>
                     {% for machine in filter.qs %}
                     <tr>
-                        <td><a href="{% url 'machine_detail' machine.id %}">{{ machine.serial_number_of_machine }}</a></td>
                         <td>
-                            <button class="summary-button"
-                                data-equipment-id="{{ machine.model_of_equipment.id }}"
-                                title="Просмотреть информацию">
-                                    <span class="back-href bold">{{ machine.model_of_equipment }}</span>
-                                    <img src="{% static 'img/eye.svg' %}" alt="Просмотреть" width="16" height="16">
-                            </button>
+                            <div class="summary-button">
+                                <a href="{% url 'machine_detail' machine.id %}" class="back-href">{{ machine.serial_number_of_machine }}</a>
+                                <img src="{% static 'img/eye.svg' %}" alt="Просмотреть" width="16" height="16" class="mg-lft">
+                            </div>
                         </td>
-                        <td>{{ machine.model_of_engine }}</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='model-of-equipment' object_id=machine.model_of_equipment.id object_name=machine.model_of_equipment %}
+                        </td>
+                        <td>
+                            {% include 'button/button.html' with object_class='model-of-engine' object_id=machine.model_of_engine.id object_name=machine.model_of_engine %}
+                        </td>
                         <td>{{ machine.serial_number_of_engine }}</td>
-                        <td>{{ machine.transmission_model }}</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='model-of-transmission' object_id=machine.transmission_model.id object_name=machine.transmission_model %}
+                        </td>
                         <td>{{ machine.serial_number_of_transmission }}</td>
-                        <td>{{ machine.drive_axle_model }}</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='model-of-drive-axle' object_id=machine.drive_axle_model.id object_name=machine.drive_axle_model %}
+                        </td>
                         <td>{{ machine.serial_number_of_drive_axle }}</td>
-                        <td>{{ machine.steering_axle_model }}</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='model-of-steering-axle' object_id=machine.steering_axle_model.id object_name=machine.steering_axle_model %}
+                        </td>
                         <td>{{ machine.serial_number_of_steering_axle }}</td>
                         <td>{{ machine.supply_contract_number_and_date }}</td>
                         <td>{{ machine.date_shipped_from_factory }}</td>
                         <td>{{ machine.recipient }}</td>
                         <td>{{ machine.delivery_address }}</td>
                         <td>{{ machine.equipment }}</td>
-                        <td>{{ machine.client }}</td>
-                        <td>{{ machine.service_company }}</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='client-info' object_id=machine.client.id object_name=machine.client %}
+                        </td>
+                        <td>
+                            {% include 'button/button.html' with object_class='service-company-info' object_id=machine.service_company.id object_name=machine.service_company %}
+                        </td>
                         {% if can_update_machine %}
                         <td>
                             <a href="{% url 'machine_update' machine.id %}" class="edit-icon" title="Изменить">

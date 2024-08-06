@@ -12,12 +12,14 @@
             <table class="adaptive-table">
                 <thead>
                     <tr>
+                        <th>Машина</th>
                         <th>Вид ТО</th>
                         <th>Дата проведения ТО</th>
                         <th>Наработка, м\час</th>
                         <th>№ заказ-наряда</th>
                         <th>Дата заказ-наряда</th>
                         <th>Организация проводившая ТО</th>
+                        <th>Сервисная компания</th>
                         {% if can_update_maintenance %}
                         <th>Изменить</th>
                         {% endif %}
@@ -29,12 +31,16 @@
                 <tbody>
                     {% for maintenance in maintenances %}
                     <tr>
-                        <td>{{ maintenance.maintenance_type }}</a></td>
+                        <td>{{ maintenance.machine }} #кликабельно</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='maintenance-type-info' object_id=maintenance.maintenance_type.id object_name=maintenance.maintenance_type %}
+                        </td>
                         <td>{{ maintenance.maintenance_date }}</td>
                         <td>{{ maintenance.operating_time }}</td>
                         <td>{{ maintenance.work_order_number }}</td>
                         <td>{{ maintenance.work_order_date }}</td>
-                        <td>{{ maintenance.the_organization_that_carried_out_the_maintenance }}</td>
+                        <td>{{ maintenance.the_organization_that_carried_out_the_maintenance }} #кликабельно, справочник</td>
+                        <td>{{ maintenance.service_company }} #кликабельно</td>
                         {% if can_update_maintenance %}
                         <td>
                             <a href="{% url 'maintenance_update' maintenance.id %}" class="edit-icon">

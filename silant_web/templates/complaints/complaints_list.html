@@ -31,9 +31,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for complaint in complaints %}
+                        {% for complaint in filter.qs %}
                         <tr>
-                            <td>{{ complaint.machine }} #кликабельно</td>
+                            <td>{{ complaint.machine.serial_number_of_machine }}</td>
                             <td>{{ complaint.date_of_refusal }}</td>
                             <td>{{ complaint.operating_time }}</td>
                             <td>
@@ -47,8 +47,7 @@
                             <td>{{ complaint.recovery_date }}</td>
                             <td>{{ complaint.equipment_downtime }}</td>
                             <td>
-                                {% include 'button/button.html' with object_class='service-company-info' object_id=complaint.service_company.id object_name=complaint.service_company %}
-                                #починить
+                                {% include 'button/button.html' with object_class='service-company-complaint-info' object_id=complaint.service_company.id object_name=complaint.service_company %}
                             </td>
                             {% if can_update_complaint %}
                             <td>

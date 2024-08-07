@@ -55,6 +55,11 @@ class RecoveryMethod(BaseModel):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
 
+
+class TheOrganizationThatCarriedOutTheMaintenance(BaseModel):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+
     
 
 class Machine(models.Model):
@@ -89,9 +94,9 @@ class Maintenance(models.Model):
     operating_time = models.IntegerField(verbose_name='Наработка, м/час')
     work_order_number = models.CharField(max_length=255, verbose_name='№ заказ-наряда')
     work_order_date = models.DateField(null=True, verbose_name='Дата заказ-наряда')
-    the_organization_that_carried_out_the_maintenance = models.CharField(max_length=255, verbose_name='Организация, проводившая ТО')
+    the_organization_that_carried_out_the_maintenance = models.ForeignKey(TheOrganizationThatCarriedOutTheMaintenance, on_delete=models.CASCADE, verbose_name='Организация, проводившая ТО')
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Машина')
-    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, verbose_name='Сервисная компания')
+    service_company = models.ForeignKey(ServiceCompany, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Сервисная компания')
 
     class Meta:
         ordering = ['-maintenance_date']

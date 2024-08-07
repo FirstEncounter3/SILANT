@@ -38,9 +38,11 @@
         {% if client %}
             <h1>Пользователь: {{ client }}</h1>
         {% elif username %}
-            <h1>Менеджер: {{ username }}</h1>
+            <h1>Пользователь: {{ username }}</h1>
+        {% elif user.is_superuser %}
+            <h1>Пользователь: Администратор</h1>
         {% else %}
-            <h1>Гость</h1>
+            <h1>Пользователь: Гость</h1>
         {% endif %}
       </div>
       {% block content %}{% endblock %}

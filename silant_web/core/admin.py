@@ -14,6 +14,7 @@ from .models import (
     Machine,
     Maintenance,
     Complaint,
+    TheOrganizationThatCarriedOutTheMaintenance,
 )
 
 # Register your models here.
@@ -31,3 +32,4 @@ admin.site.register(RecoveryMethod)
 admin.site.register(Machine)
 admin.site.register(Maintenance)
 admin.site.register(Complaint)
+admin.site.register(TheOrganizationThatCarriedOutTheMaintenance)

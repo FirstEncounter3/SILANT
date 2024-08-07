@@ -25,6 +25,7 @@ from .views import (
     maintenance_type_info,
     failure_node_info,
     recovery_method_info,
+    the_organization_that_carried_out_the_maintenance_info,
 )
 
 urlpatterns = [
@@ -52,7 +53,10 @@ urlpatterns = [
     path('machines/service_company_info/<int:service_company_id>/', service_company_info, name='service_company_info'),
 
     path('maintenances/maintenance_type_info/<int:maintenance_type_id>/', maintenance_type_info, name='maintenance_type_info'),
+    path('maintenances/service_company_maintenance_info/<int:service_company_id>/', service_company_info, name='service_company_info'),
+    path('maintenances/the_organization_that_carried_out_the_maintenance_info/<int:organization_id>/', the_organization_that_carried_out_the_maintenance_info, name='the_organization_that_carried_out_the_maintenance_info'),
 
     path('complaints/failure_node_info/<int:failure_node_id>/', failure_node_info, name='failure_node_info'),
     path('complaints/recovery_method_info/<int:recovery_method_id>/', recovery_method_info, name='recovery_method_info'),
+    path('complaints/service_company_complaint_info/<int:service_company_id>/', service_company_info, name='service_company_info'),
 ]

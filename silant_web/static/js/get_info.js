@@ -58,8 +58,16 @@ document.querySelectorAll(".service-company-info").forEach(button => {
     button.addEventListener("click", () => buttonInit(button, 'machines/', 'service_company_info/'));
 })
 
+document.querySelectorAll(".service-company-maintenance-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'maintenances/', 'service_company_maintenance_info/'));
+})
+
 document.querySelectorAll(".maintenance-type-info").forEach(button => {
     button.addEventListener("click", () => buttonInit(button, 'maintenances/', 'maintenance_type_info/'));
+})
+
+document.querySelectorAll(".organization-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'maintenances/', 'the_organization_that_carried_out_the_maintenance_info/'));
 })
 
 document.querySelectorAll(".failure-node-info").forEach(button => {
@@ -68,4 +76,8 @@ document.querySelectorAll(".failure-node-info").forEach(button => {
 
 document.querySelectorAll(".recovery-method-info").forEach(button => {
     button.addEventListener("click", () => buttonInit(button, 'complaints/', 'recovery_method_info/'));
+})
+
+document.querySelectorAll(".service-company-complaint-info").forEach(button => {
+    button.addEventListener("click", () => buttonInit(button, 'complaints/', 'service_company_complaint_info/'));
 })

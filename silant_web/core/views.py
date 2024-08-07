@@ -5,11 +5,8 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse, HttpResponseNotAllowed
 
 from django.views.generic import (
-    ListView,
     CreateView,
     UpdateView,
-    DeleteView,
-    DetailView,
 )
 
 from .models import (
@@ -26,6 +23,7 @@ from .models import (
     FailureNode,
     RecoveryMethod,
     Complaint,
+    TheOrganizationThatCarriedOutTheMaintenance,
 )
 
 from .forms import (
@@ -134,13 +132,16 @@ def machine_list(request):
     can_add_machine = request.user.has_perm("core.add_machine")
     can_update_machine = request.user.has_perm("core.change_machine")
     can_delete_machine = request.user.has_perm("core.delete_machine")
+    client = None
+    username = request.user.first_name
 
     try:
         client = Client.objects.get(user_id=user_id)
+        
     except Client.DoesNotExist:
+        client = username
         machines = Machine.objects.all()
         machine_filter = MachineFilter(request.GET, queryset=machines)
-        username = request.user.username
 
         return render(
             request,
@@ -151,6 +152,7 @@ def machine_list(request):
                 "can_add_machine": can_add_machine,
                 "can_update_machine": can_update_machine,
                 "can_delete_machine": can_delete_machine,
+                "client": client,
                 "username": username,
             },
         )
@@ -253,6 +255,7 @@ def maintenance_list(request):
     maintenances = Maintenance.objects.all()
     maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
     client = None
+    username = request.user.first_name
 
     can_add_maintenances = request.user.has_perm("core.add_maintenance")
     can_update_maintenance = request.user.has_perm("core.change_maintenance")
@@ -261,7 +264,7 @@ def maintenance_list(request):
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = "Гость"
+        client = username
 
     return render(
         request,
@@ -272,7 +275,7 @@ def maintenance_list(request):
             "can_add_maintenance": can_add_maintenances,
             "can_update_maintenance": can_update_maintenance,
             "can_delete_maintenance": can_delete_maintenance,
-            "username": request.user.username,
+            "username": username,
             "client": client,
         },
     )
@@ -334,11 +337,12 @@ def complaints_list(request):
     can_update_complaints = request.user.has_perm("core.change_complaint")
     can_delete_complaints = request.user.has_perm("core.delete_complaint")
     client = None
+    username = request.user.first_name
 
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = "Гость"
+        client = username
 
     return render(
         request,
@@ -349,7 +353,7 @@ def complaints_list(request):
             "can_add_complaint": can_add_complaints,
             "can_update_complaint": can_update_complaints,
             "can_delete_complaint": can_delete_complaints,
-            "username": request.user.username,
+            "username": username,
             "client": client,
         },
     )
@@ -537,4 +541,17 @@ def recovery_method_info(request, recovery_method_id):
             return JsonResponse(data)
         except RecoveryMethod.DoesNotExist:
             return JsonResponse({"success": False, "error": "Метод восстановления не найден"}, status=404)
+    return HttpResponseNotAllowed(["GET"])
+
+def the_organization_that_carried_out_the_maintenance_info(request, organization_id):
+    if request.method == "GET":
+        try:
+            the_organization_that_carried_out_the_maintenance_info = TheOrganizationThatCarriedOutTheMaintenance.objects.get(id=organization_id)
+            data = {
+                "name": the_organization_that_carried_out_the_maintenance_info.name,
+                "description": the_organization_that_carried_out_the_maintenance_info.description
+            }
+            return JsonResponse(data)
+        except TheOrganizationThatCarriedOutTheMaintenance.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Организация не найдена"}, status=404)
     return HttpResponseNotAllowed(["GET"])

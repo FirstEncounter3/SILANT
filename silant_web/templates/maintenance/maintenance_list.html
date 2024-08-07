@@ -19,7 +19,6 @@
                         <th>№ заказ-наряда</th>
                         <th>Дата заказ-наряда</th>
                         <th>Организация проводившая ТО</th>
-                        <th>Сервисная компания</th>
                         {% if can_update_maintenance %}
                         <th>Изменить</th>
                         {% endif %}
@@ -29,9 +28,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for maintenance in maintenances %}
+                    {% for maintenance in filter.qs %}
                     <tr>
-                        <td>{{ maintenance.machine }} #кликабельно</td>
+                        <td>{{ maintenance.machine.serial_number_of_machine }}</td>
                         <td>
                             {% include 'button/button.html' with object_class='maintenance-type-info' object_id=maintenance.maintenance_type.id object_name=maintenance.maintenance_type %}
                         </td>
@@ -39,8 +38,9 @@
                         <td>{{ maintenance.operating_time }}</td>
                         <td>{{ maintenance.work_order_number }}</td>
                         <td>{{ maintenance.work_order_date }}</td>
-                        <td>{{ maintenance.the_organization_that_carried_out_the_maintenance }} #кликабельно, справочник</td>
-                        <td>{{ maintenance.service_company }} #кликабельно</td>
+                        <td>
+                            {% include 'button/button.html' with object_class='organization-info' object_id=maintenance.the_organization_that_carried_out_the_maintenance.id object_name=maintenance.the_organization_that_carried_out_the_maintenance %}
+                        </td>
                         {% if can_update_maintenance %}
                         <td>
                             <a href="{% url 'maintenance_update' maintenance.id %}" class="edit-icon">

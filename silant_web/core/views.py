@@ -137,10 +137,29 @@ def machine_list(request):
 
     try:
         client = Client.objects.get(user_id=user_id)
-        
     except Client.DoesNotExist:
+        try:
+            service_company = ServiceCompany.objects.get(user_id=user_id)
+        except ServiceCompany.DoesNotExist:
+            client = username
+            machines = Machine.objects.all()
+            machine_filter = MachineFilter(request.GET, queryset=machines)
+
+            return render(
+                request,
+                "machine/machine_list.html",
+                {
+                    "machines": machines,
+                    "filter": machine_filter,
+                    "can_add_machine": can_add_machine,
+                    "can_update_machine": can_update_machine,
+                    "can_delete_machine": can_delete_machine,
+                    "client": client,
+                    "username": username,
+                },
+            )
         client = username
-        machines = Machine.objects.all()
+        machines = Machine.objects.filter(service_company_id=service_company.id)
         machine_filter = MachineFilter(request.GET, queryset=machines)
 
         return render(
@@ -203,6 +222,8 @@ def machine_delete(request, machine_id):
 @permission_required("core.view_maintenance", raise_exception=True)
 def machine_detail(request, machine_id):
     client = None
+    username = request.user.first_name
+
     try:
         machine = Machine.objects.get(id=machine_id)
     except Machine.DoesNotExist:
@@ -211,7 +232,7 @@ def machine_detail(request, machine_id):
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
-        client = "Гость"
+        client = username
 
     maintenances = Maintenance.objects.filter(machine_id=machine_id)
 
@@ -221,7 +242,7 @@ def machine_detail(request, machine_id):
         {
             "machine": machine,
             "maintenances": maintenances,
-            "username": request.user.username,
+            "username": username,
             "client": client,
         },
     )
@@ -236,6 +257,11 @@ class MachineCreateView(CreateView):
     model = Machine
     template_name = "machine/machine_create.html"
     success_url = "/machines/"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.request.user.first_name
+        return context
 
 
 @method_decorator(login_required, name="dispatch")
@@ -252,10 +278,9 @@ class MachineUpdateView(UpdateView):
 @login_required
 @permission_required("core.view_maintenance", raise_exception=True)
 def maintenance_list(request):
-    maintenances = Maintenance.objects.all()
-    maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
     client = None
     username = request.user.first_name
+    service_company = None
 
     can_add_maintenances = request.user.has_perm("core.add_maintenance")
     can_update_maintenance = request.user.has_perm("core.change_maintenance")
@@ -264,19 +289,57 @@ def maintenance_list(request):
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
+        try:
+            service_company = ServiceCompany.objects.get(user_id=request.user.id)
+        except ServiceCompany.DoesNotExist:
+            maintenances = Maintenance.objects.all()
+            maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+
+            return render(
+                request,
+                "maintenance/maintenance_list.html",
+                {
+                    "maintenances": maintenances,
+                    "filter": maintenances_filter,
+                    "can_add_maintenance": can_add_maintenances,
+                    "can_update_maintenance": can_update_maintenance,
+                    "can_delete_maintenance": can_delete_maintenance,
+                    "username": username,
+                    "client": client,
+                },
+            )
+
         client = username
+        maintenances = Maintenance.objects.filter(service_company_id=service_company.id)
+        maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+
+        return render(
+            request,
+            "maintenance/maintenance_list.html",
+            {
+                "maintenances": maintenances,
+                "filter": maintenances_filter,
+                "can_add_maintenance": can_add_maintenances,
+                "can_update_maintenance": can_update_maintenance,
+                "can_delete_maintenance": can_delete_maintenance,
+                "username": username,
+                "client": client,
+            },
+        )
+    client_machines = Machine.objects.filter(client=client)
+    maintenances = Maintenance.objects.filter(machine__in=client_machines)
+    maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
 
     return render(
         request,
         "maintenance/maintenance_list.html",
         {
             "maintenances": maintenances,
+            "client": client,
             "filter": maintenances_filter,
             "can_add_maintenance": can_add_maintenances,
             "can_update_maintenance": can_update_maintenance,
             "can_delete_maintenance": can_delete_maintenance,
-            "username": username,
-            "client": client,
         },
     )
 
@@ -315,6 +378,29 @@ class MaintenanceCreateView(CreateView):
     template_name = "maintenance/maintenance_create.html"
     success_url = "/maintenances/"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        try:
+            client = Client.objects.get(user=self.request.user)
+
+            form.fields["machine"].queryset = Machine.objects.filter(client=client)
+        except Client.DoesNotExist:
+            pass
+
+        try:
+            service_company = ServiceCompany.objects.get(user=self.request.user)
+            form.fields["the_organization_that_carried_out_the_maintenance"].queryset = ServiceCompany.objects.filter(id=service_company.id)
+            form.fields["service_company"].queryset = ServiceCompany.objects.filter(id=service_company.id)
+        except ServiceCompany.DoesNotExist:
+            pass
+
+        return form
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.request.user.first_name
+        return context
+
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(
@@ -331,8 +417,6 @@ class MaintenanceUpdateView(UpdateView):
 @login_required
 @permission_required("core.view_complaint", raise_exception=True)
 def complaints_list(request):
-    complaints = Complaint.objects.all()
-    complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
     can_add_complaints = request.user.has_perm("core.add_complaint")
     can_update_complaints = request.user.has_perm("core.change_complaint")
     can_delete_complaints = request.user.has_perm("core.delete_complaint")
@@ -342,19 +426,57 @@ def complaints_list(request):
     try:
         client = Client.objects.get(user_id=request.user.id)
     except Client.DoesNotExist:
+        try: 
+            service_company = ServiceCompany.objects.get(user_id=request.user.id)
+        except ServiceCompany.DoesNotExist:
+            complaints = Complaint.objects.all()
+            complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
+
+            return render(
+                request,
+                "complaints/complaints_list.html",
+                {
+                    "complaints": complaints,
+                    "filter": complaints_filter,
+                    "can_add_complaint": can_add_complaints,
+                    "can_update_complaint": can_update_complaints,
+                    "can_delete_complaint": can_delete_complaints,
+                    "username": username,
+                    "client": client,
+                },
+            )
+        
         client = username
+        complaints = Complaint.objects.filter(service_company_id=service_company.id)
+        complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
+
+        return render(
+            request,
+            "complaints/complaints_list.html",
+            {
+                "complaints": complaints,
+                "filter": complaints_filter,
+                "can_add_complaint": can_add_complaints,
+                "can_update_complaint": can_update_complaints,
+                "can_delete_complaint": can_delete_complaints,
+                "username": username,
+                "client": client,
+            },
+        )
+    client_machines = Machine.objects.filter(client=client)
+    complaints = Complaint.objects.filter(machine__in=client_machines)
+    complaints_filter = ComplaintFilter(request.GET, queryset=complaints)
 
     return render(
         request,
         "complaints/complaints_list.html",
         {
             "complaints": complaints,
+            "client": client,
             "filter": complaints_filter,
             "can_add_complaint": can_add_complaints,
             "can_update_complaint": can_update_complaints,
             "can_delete_complaint": can_delete_complaints,
-            "username": username,
-            "client": client,
         },
     )
 
@@ -368,6 +490,21 @@ class ComplaintCreateView(CreateView):
     model = Complaint
     template_name = "complaints/complaint_create.html"
     success_url = "/complaints/"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        try:
+            service_company = ServiceCompany.objects.get(user=self.request.user)
+            form.fields["service_company"].queryset = ServiceCompany.objects.filter(id=service_company.id)
+        except ServiceCompany.DoesNotExist:
+            pass
+
+        return form
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.request.user.first_name
+        return context
 
 
 @method_decorator(login_required, name="dispatch")

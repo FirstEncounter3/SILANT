@@ -235,6 +235,7 @@ def machine_detail(request, machine_id):
         client = username
 
     maintenances = Maintenance.objects.filter(machine_id=machine_id)
+    maintenances_filter = MaintenanceFilter(request.GET, queryset=maintenances)
 
     return render(
         request,
@@ -244,6 +245,7 @@ def machine_detail(request, machine_id):
             "maintenances": maintenances,
             "username": username,
             "client": client,
+            "filter": maintenances_filter,
         },
     )
 

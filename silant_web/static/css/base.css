@@ -33,6 +33,14 @@ nav {
     color: black;
 }
 
+.contact-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
 .logo-signin-wrapper {
     display: flex;
     justify-content: space-between;
@@ -99,6 +107,10 @@ footer {
 @media screen and (max-width: 768px) {
     .title {
         font-size: 24px;
+    }
+
+    .logo-signin-wrapper > a {
+        padding-right: 5px;
     }
     
 }

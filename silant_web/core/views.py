@@ -389,7 +389,6 @@ class MaintenanceCreateView(CreateView):
 
         try:
             service_company = ServiceCompany.objects.get(user=self.request.user)
-            form.fields["the_organization_that_carried_out_the_maintenance"].queryset = ServiceCompany.objects.filter(id=service_company.id)
             form.fields["service_company"].queryset = ServiceCompany.objects.filter(id=service_company.id)
         except ServiceCompany.DoesNotExist:
             pass

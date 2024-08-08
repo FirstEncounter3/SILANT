@@ -4,7 +4,7 @@
 {% load static %}
 <main class="main">
     <div class="result-wrapper">
-        <h1>Информация обо всех заказах ТО</h1>
+        <h1>Информация обо всех заказах ТО для ваших машин</h1>
         {% include 'tabs.html' with active_tab='maintenance' %}
         {% if maintenances %}
         {% include 'forms/filter_form.html' %}

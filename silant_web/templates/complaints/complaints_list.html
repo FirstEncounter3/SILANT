@@ -4,7 +4,7 @@
 {% load static %}
 <main class="main">
     <div class="result-wrapper">
-        <h1>Информация о доступных рекламациях</h1>
+        <h1>Информация обо всех рекламациях ваших машин</h1>
         {% include 'tabs.html' with active_tab='complaint' %}
         {% if complaints %}
         {% include 'forms/filter_form.html' %}
